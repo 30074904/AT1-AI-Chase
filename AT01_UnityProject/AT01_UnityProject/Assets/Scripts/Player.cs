@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float speed = 4;
     private bool moving = false;
     private Vector3 currentDir;
+    public float x_move = 0f;
+    public float z_move = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +35,19 @@ public class Player : MonoBehaviour
         if (moving == false)
         {
             //Implement inputs and event-callbacks here
+            x_move = Input.GetAxis("Horizontal") * 10f * Time.deltaTime;
+            z_move = Input.GetAxis("Vertical") * 10f * Time.deltaTime;
+            if (z_move < 0f)
+            {
+                //send a raycast south if it hits a node have the player move that way
+                if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, 10f))
+                {
+                    if(hit.collider.tag == "node")
+                    {
+
+                    }
+                }
+            }
         }
         else
         {

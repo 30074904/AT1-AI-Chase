@@ -9,6 +9,7 @@ public class Node : MonoBehaviour
     [Tooltip("Child directly below node should always be first in array.")]
     [SerializeField] private Node[] children;
 
+    public List<Node> neighbours = new List<Node>();
     /// <summary>
     /// Returns the children of the node.
     /// </summary>
@@ -17,6 +18,7 @@ public class Node : MonoBehaviour
     /// Returns the parents of the node.
     /// </summary>
     public Node[] Parents { get { return parents; } }
+
 
     private Vector3 offset = new Vector3(0, 1, 0);
 
@@ -37,6 +39,13 @@ public class Node : MonoBehaviour
             {
                 Debug.DrawLine(transform.position + offset, node.transform.position + offset, Color.green);
             }
+        }
+    }
+    public void GetParentLocation()
+    {
+        foreach (Node node in parents)
+        {
+            neighbours.Add(node);
         }
     }
 }
