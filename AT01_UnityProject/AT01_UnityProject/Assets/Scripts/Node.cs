@@ -8,8 +8,9 @@ public class Node : MonoBehaviour
     [SerializeField] private Node[] parents;
     [Tooltip("Child directly below node should always be first in array.")]
     [SerializeField] private Node[] children;
+    private Vector3 checkingnode;
 
-    public List<Node> neighbours = new List<Node>();
+    public List<Vector3> neighbours = new List<Vector3>();
     /// <summary>
     /// Returns the children of the node.
     /// </summary>
@@ -19,8 +20,12 @@ public class Node : MonoBehaviour
     /// </summary>
     public Node[] Parents { get { return parents; } }
 
-
+    public bool marked = false;
     private Vector3 offset = new Vector3(0, 1, 0);
+
+    private void start()
+    {
+    }
 
     private void OnDrawGizmos()
     {
@@ -41,11 +46,26 @@ public class Node : MonoBehaviour
             }
         }
     }
-    public void GetParentLocation()
+    public List<Node> GetChildLocation()
     {
-        foreach (Node node in parents)
+        foreach (Node node in children)
         {
-            neighbours.Add(node);
+            checkingnode = node.transform.position;
+            if (!neighbours.Contains(checkingnode))
+            {
+                neighbours.Add(node.transform.position);
+            }
+            return neighbours;
         }
+    }
+
+    public Vector3 GetLocation(Vector3 nodeloc, Node node)
+    {
+        nodeloc = node.transform.position;
+        return nodeloc;
+    }
+    public void GetChildren()
+    {
+
     }
 }

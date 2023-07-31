@@ -9,6 +9,9 @@ public class Enemy : MonoBehaviour
     private Node currentNode;
     private Vector3 currentDir;
     private bool playerCaught = false;
+    public Node nodecontroller;
+
+    //public List<Node> nodeList = new List<Node>();
 
     public delegate void GameEndDelegate();
     public event GameEndDelegate GameOverEvent = delegate { };
@@ -65,6 +68,8 @@ public class Enemy : MonoBehaviour
         currentNode = GameManager.Instance.Nodes[0];
         currentDir = currentNode.transform.position - transform.position;
         currentDir = currentDir.normalized;
+
+        //nodeList.Add(currentNode);
     }
 
     //Implement DFS algorithm method here
