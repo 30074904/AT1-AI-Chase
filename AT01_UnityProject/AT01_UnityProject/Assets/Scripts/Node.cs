@@ -46,10 +46,11 @@ public class Node : MonoBehaviour
             }
         }
     }
-    public List<Node> GetChildLocation()
+    public List<Vector3> GetChildLocation(List<Vector3> neighbours, List<Node> Children)
     {
         foreach (Node node in children)
         {
+            // I need to check if the bool marked is true or false if its false then change it to true on the node and go there.
             checkingnode = node.transform.position;
             if (!neighbours.Contains(checkingnode))
             {
