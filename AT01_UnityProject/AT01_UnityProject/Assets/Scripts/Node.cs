@@ -8,7 +8,6 @@ public class Node : MonoBehaviour
     [SerializeField] private Node[] parents;
     [Tooltip("Child directly below node should always be first in array.")]
     [SerializeField] private Node[] children;
-    private Vector3 checkingnode;
 
     public List<Vector3> neighbours = new List<Vector3>();
     /// <summary>
@@ -21,8 +20,10 @@ public class Node : MonoBehaviour
     public Node[] Parents { get { return parents; } }
 
     public bool marked = false;
-    private Vector3 offset = new Vector3(0, 1, 0);
 
+    private Vector3 checkingnode = new Vector3(0, 0, 0);
+
+    private Vector3 offset = new Vector3(0, 1, 0);
     private void start()
     {
     }
@@ -46,27 +47,44 @@ public class Node : MonoBehaviour
             }
         }
     }
-    public List<Vector3> GetChildLocation(List<Vector3> neighbours, List<Node> Children)
+    public List<Vector3> GetChildLocation(List<Vector3> neighbours, GameObject currnode)
+    {
+        foreach (Node node in currnode.children)
+        {
+            // I need to check if the bool marked is true or false if its false then change it to true on the node and go there.
+            //GetChecked = node.TryGetComponent<Node>();
+            if (node.marked == false)
+            {
+                checkingnode = node.transform.position;
+                neighbours.Add(checkingnode);
+                marked = true;
+                return neighbours;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        return null;
+    }
+    /*public void GetNodeComponent()
     {
         foreach (Node node in children)
         {
             // I need to check if the bool marked is true or false if its false then change it to true on the node and go there.
-            checkingnode = node.transform.position;
-            if (!neighbours.Contains(checkingnode))
-            {
-                neighbours.Add(node.transform.position);
-            }
-            return neighbours;
+            GetChecked = node.TryGetComponent<Node>();
+            return 
         }
-    }
-
+    }*/
     public Vector3 GetLocation(Vector3 nodeloc, Node node)
     {
         nodeloc = node.transform.position;
         return nodeloc;
     }
-    public void GetChildren()
+    public int GetChildren(int itemp, int btemp)
     {
-
+        itemp = itemp + 1;
+        btemp = itemp;
+        return btemp;
     }
 }
