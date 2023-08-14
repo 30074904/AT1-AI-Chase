@@ -47,7 +47,7 @@ public class Node : MonoBehaviour
             }
         }
     }
-    public List<Vector3> GetChildLocation(List<Vector3> neighbours, GameObject currnode)
+    /*public List<Vector3> GetChildLocation(List<Vector3> neighbours, GameObject currnode)
     {
         foreach (Node node in currnode.children)
         {
@@ -66,7 +66,7 @@ public class Node : MonoBehaviour
             }
         }
         return null;
-    }
+    }*/
     /*public void GetNodeComponent()
     {
         foreach (Node node in children)
@@ -76,7 +76,7 @@ public class Node : MonoBehaviour
             return 
         }
     }*/
-    public Vector3 GetLocation(Vector3 nodeloc, Node node)
+    /*public Vector3 GetLocation(Vector3 nodeloc, Node node)
     {
         nodeloc = node.transform.position;
         return nodeloc;
@@ -86,5 +86,13 @@ public class Node : MonoBehaviour
         itemp = itemp + 1;
         btemp = itemp;
         return btemp;
+    }*/
+    public void BecomeList(List<Node> NChild)
+    {
+        foreach (Node node in children)
+        {
+            NChild.Add(node);
+        }
+        return NChild;
     }
 }
