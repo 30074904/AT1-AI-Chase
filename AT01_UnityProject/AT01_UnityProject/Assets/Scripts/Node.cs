@@ -12,6 +12,7 @@ public class Node : MonoBehaviour
     /// <summary>
     /// Returns the children of the node.
     /// </summary>
+    [SerializeField] public List<Node> listChildren = new List<Node>();
     public Node[] Children { get { return children; } }
     /// <summary>
     /// Returns the parents of the node.
@@ -19,7 +20,13 @@ public class Node : MonoBehaviour
     public Node[] Parents { get { return parents; } }
 
     private Vector3 offset = new Vector3(0, 1, 0);
-
+    private void Awake()
+    {
+        foreach (Node node in children)
+        {
+            listChildren.Add(node);
+        }
+    }
     private void OnDrawGizmos()
     {
         //Draws red lines between a parent and its children.

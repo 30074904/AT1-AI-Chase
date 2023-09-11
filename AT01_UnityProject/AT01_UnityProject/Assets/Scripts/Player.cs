@@ -8,12 +8,16 @@ public class Player : MonoBehaviour
     //Define delegate types and events here
 
     public Node CurrentNode { get; private set; }
-    public Node TargetNode { get; private set; }
+    [SerializeField] public Node TargetNode { get; private set; }
+
 
     [SerializeField] private float speed = 4;
     private bool moving = false;
     private Vector3 currentDir;
-
+    private void Awake()
+    {
+        TargetNode = CurrentNode;
+    }
     // Start is called before the first frame update
     void Start()
     {

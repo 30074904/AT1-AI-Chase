@@ -13,7 +13,12 @@ public class Enemy : MonoBehaviour
     // Custom variables start
 
     [SerializeField] private Node startNode;
-// Custom varialbles end
+    [SerializeField] private Player player;
+
+    public bool started = false;
+
+    private Node tempNode;
+    // Custom varialbles end
 
     public delegate void GameEndDelegate();
     public event GameEndDelegate GameOverEvent = delegate { };
@@ -35,8 +40,18 @@ public class Enemy : MonoBehaviour
                 if (Vector3.Distance(transform.position, currentNode.transform.position) > 0.25f)
                 {
                     transform.Translate(currentDir * speed * Time.deltaTime);
-                    DFSAlgo()
+                    if (started == false)
+                    {
+                        DFSAlgo(startNode);
+                    }
+                    else
+                    {
+                        DFSAlgo(tempNode);
+                        started = true;
+                    }
+
                 }
+
                 //Implement path finding here
             }
             else
@@ -72,9 +87,56 @@ public class Enemy : MonoBehaviour
         currentDir = currentNode.transform.position - transform.position;
         currentDir = currentDir.normalized;
     }
-    void DFSAlgo()
+    void DFSAlgo(Node currNode)
     {
+        // create lists of nodes visited and nodes in the stack
+        List<Node> visitedNodes = new List<Node>();
+        List<Node> stackNodes = new List<Node>();
 
+        List<Node> childrenNodes = new List<Node>();
+
+        Node playerDestination;
+
+        //Node currNode = startNode;
+
+        playerDestination = player.TargetNode;
+        
+        visitedNodes.Add(currNode);
+
+        if (currNode != playerDestination)
+        {
+            
+            visitedNodes.Add(currNode);
+            childrenNodes = currNode.listChildren;
+
+            if (childrenNodes != null)
+            {
+                foreach (Node node in childrenNodes)
+                {
+                    if (!visitedNodes.Contains(node))
+                    {
+                        if (!stackNodes.Contains(node))
+                        {
+                            stackNodes.Add(node);
+                        }
+                    }
+                }
+                tempNode = stackNodes[stackNodes.Count - 1];
+            }
+            else
+            {
+                stackNodes.Remove(stackNodes[stackNodes.Count - 1]);
+                tempNode = stackNodes[stackNodes.Count - 1];
+            }
+            
+        }
+        else
+        {
+            currentNode = currNode;
+            currentDir = currentNode.transform.position - transform.position;
+            currentDir = currentDir.normalized;
+        }
+        
     }
     //Implement DFS algorithm method here
 }
