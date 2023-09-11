@@ -9,9 +9,11 @@ public class Enemy : MonoBehaviour
     private Node currentNode;
     private Vector3 currentDir;
     private bool playerCaught = false;
-    public Node nodecontroller;
 
-    //public List<Node> nodeList = new List<Node>();
+    // Custom variables start
+
+    [SerializeField] private Node startNode;
+// Custom varialbles end
 
     public delegate void GameEndDelegate();
     public event GameEndDelegate GameOverEvent = delegate { };
@@ -33,6 +35,7 @@ public class Enemy : MonoBehaviour
                 if (Vector3.Distance(transform.position, currentNode.transform.position) > 0.25f)
                 {
                     transform.Translate(currentDir * speed * Time.deltaTime);
+                    DFSAlgo()
                 }
                 //Implement path finding here
             }
@@ -68,9 +71,10 @@ public class Enemy : MonoBehaviour
         currentNode = GameManager.Instance.Nodes[0];
         currentDir = currentNode.transform.position - transform.position;
         currentDir = currentDir.normalized;
-
-        //nodeList.Add(currentNode);
     }
+    void DFSAlgo()
+    {
 
+    }
     //Implement DFS algorithm method here
 }
