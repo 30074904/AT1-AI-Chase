@@ -19,9 +19,14 @@ public class Node : MonoBehaviour
     /// </summary>
     public Node[] Parents { get { return parents; } }
 
+    public Vector3 tLocation;
+
     private Vector3 offset = new Vector3(0, 1, 0);
     private void Awake()
     {
+
+        tLocation = transform.position;
+
         foreach (Node node in children)
         {
             listChildren.Add(node);

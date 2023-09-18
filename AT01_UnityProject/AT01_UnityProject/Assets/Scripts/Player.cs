@@ -10,10 +10,18 @@ public class Player : MonoBehaviour
     public Node CurrentNode { get; private set; }
     [SerializeField] public Node TargetNode { get; private set; }
 
+    float x_move = 0f;
+    float y_move = 0f;
 
     [SerializeField] private float speed = 4;
     private bool moving = false;
     private Vector3 currentDir;
+
+    public bool bleft;
+    public bool bright;
+    public bool bup;
+    public bool bdown;
+
     private void Awake()
     {
         TargetNode = CurrentNode;
@@ -21,6 +29,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        EventManager.GoMoveEvent += Inputs;
+
         foreach (Node node in GameManager.Instance.Nodes)
         {
             if(node.Parents.Length > 2 && node.Children.Length == 0)
@@ -34,10 +44,13 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (moving == false)
         {
             //Implement inputs and event-callbacks here
-            Inputs();
+            x_move = Input.GetAxis("Horizontal");
+            y_move = Input.GetAxis("Vertical");
+            Inputs(0);
             
         }
         else
@@ -50,6 +63,7 @@ public class Player : MonoBehaviour
             {
                 moving = false;
                 CurrentNode = TargetNode;
+                transform.position = CurrentNode.tLocation;
             }
         }
     }
@@ -70,31 +84,73 @@ public class Player : MonoBehaviour
             moving = true;
         }
     }
-    void Inputs()
+    void Inputs(int direction)
     {
-        RaycastHit hit;
-        float x_move = Input.GetAxis("Horizontal");
-        float y_move = Input.GetAxis("Vertical");
-
-        GameObject nHit;
-
-        if (x_move > 0)
+        if (moving == false)
         {
-            
-            if (Physics.Raycast(transform.position, Vector3.left, out hit, 10))
+            RaycastHit hit;
+            if (x_move < 0 | direction == 1)
             {
-                Debug.Log("Right");
+                if (Physics.Raycast(transform.position, Vector3.left, out hit, 10))
+                {
+                    MoveToNode(hit.collider.gameObject.GetComponent<Node>());
+                    EventManager.updateColorEvent(Color.green, 1);
+                    direction = 0;
+                }
+                else
+                {
+                    EventManager.updateColorEvent(Color.red, 1);
+                }
+            }
+            if (x_move > 0 | direction == 2)
+            {
+                if (Physics.Raycast(transform.position, Vector3.right, out hit, 10))
+                {
+                    MoveToNode(hit.collider.gameObject.GetComponent<Node>());
+                    EventManager.updateColorEvent(Color.green, 2);
+                    direction = 0;
+                }
+                else
+                {
+                    EventManager.updateColorEvent(Color.red, 2);
+                }
+            }
+            if (y_move > 0 | direction == 3)
+            {
+                if (Physics.Raycast(transform.position, Vector3.forward, out hit, 10))
+                {
+                    MoveToNode(hit.collider.gameObject.GetComponent<Node>());
+                    EventManager.updateColorEvent(Color.green, 3);
+                    direction = 0;
+                }
+                else
+                {
+                    EventManager.updateColorEvent(Color.red, 3);
+                }
+            }
+            if (y_move < 0 | direction == 4)
+            {
+                if (Physics.Raycast(transform.position, Vector3.back, out hit, 10))
+                {
+                    MoveToNode(hit.collider.gameObject.GetComponent<Node>());
+                    EventManager.updateColorEvent(Color.green, 4);
+                    direction = 0;
+                }
+                else
+                {
+                    EventManager.updateColorEvent(Color.red, 4);
+                }
             }
         }
-        if (x_move < 0)
-        {
-            if (Physics.Raycast(transform.position, Vector3.right, out hit, 10))
-            {
-                nHit = hit;
-                MoveToNode(hit);
-                Debug.Log("Left");
-            }
-        }
+        
 
+        
+
+
+    }
+    public void buttonpush(int potatoe)
+    {
+
+        Inputs(potatoe);
     }
 }

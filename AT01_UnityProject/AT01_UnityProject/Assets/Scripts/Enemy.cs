@@ -36,7 +36,15 @@ public class Enemy : MonoBehaviour
     {
         if (playerCaught == false)
         {
-            playerDestination = player.CurrentNode;
+            if (player.TargetNode == null)
+            {
+                playerDestination = player.CurrentNode;
+            }
+            else
+            {
+                playerDestination = player.TargetNode;
+            }
+            
 
             if (currentNode != null)
             {
@@ -47,7 +55,11 @@ public class Enemy : MonoBehaviour
                     
 
                 }
-                DFSAlgo();
+                else
+                {
+                    DFSAlgo();
+                }
+
                 /*if (started == false)
                 {
                     DFSAlgo(startNode);
@@ -162,7 +174,6 @@ public class Enemy : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("its deadend");
                     visitedNodes.Add(currNode);
 
                     stackNodes.Remove(currNode);
@@ -174,7 +185,6 @@ public class Enemy : MonoBehaviour
             else
             {
                 targetFound = true;
-                Debug.Log("found destination");
                 currentNode = currNode;
                 currentDir = currentNode.transform.position - transform.position;
                 currentDir = currentDir.normalized;
