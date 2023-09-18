@@ -37,6 +37,8 @@ public class Player : MonoBehaviour
         if (moving == false)
         {
             //Implement inputs and event-callbacks here
+            Inputs();
+            
         }
         else
         {
@@ -67,5 +69,32 @@ public class Player : MonoBehaviour
             currentDir = currentDir.normalized;
             moving = true;
         }
+    }
+    void Inputs()
+    {
+        RaycastHit hit;
+        float x_move = Input.GetAxis("Horizontal");
+        float y_move = Input.GetAxis("Vertical");
+
+        GameObject nHit;
+
+        if (x_move > 0)
+        {
+            
+            if (Physics.Raycast(transform.position, Vector3.left, out hit, 10))
+            {
+                Debug.Log("Right");
+            }
+        }
+        if (x_move < 0)
+        {
+            if (Physics.Raycast(transform.position, Vector3.right, out hit, 10))
+            {
+                nHit = hit;
+                MoveToNode(hit);
+                Debug.Log("Left");
+            }
+        }
+
     }
 }

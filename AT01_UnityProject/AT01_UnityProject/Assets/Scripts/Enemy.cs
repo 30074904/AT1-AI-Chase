@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     [Tooltip("Movement speed modifier.")]
     [SerializeField] private float speed = 3;
-    private Node currentNode;
+    [SerializeField] private Node currentNode;
     private Vector3 currentDir;
     private bool playerCaught = false;
 
@@ -17,7 +17,9 @@ public class Enemy : MonoBehaviour
 
     public bool started = false;
 
-    private Node tempNode;
+    [SerializeField] private Node tempNode;
+
+    public Node playerDestination;
     // Custom varialbles end
 
     public delegate void GameEndDelegate();
@@ -34,23 +36,30 @@ public class Enemy : MonoBehaviour
     {
         if (playerCaught == false)
         {
+            playerDestination = player.CurrentNode;
+
             if (currentNode != null)
             {
-                //If within 0.25 units of the current node.
+                //If more 0.25 units of the current node.
                 if (Vector3.Distance(transform.position, currentNode.transform.position) > 0.25f)
                 {
                     transform.Translate(currentDir * speed * Time.deltaTime);
-                    if (started == false)
-                    {
-                        DFSAlgo(startNode);
-                    }
-                    else
-                    {
-                        DFSAlgo(tempNode);
-                        started = true;
-                    }
+                    
 
                 }
+                DFSAlgo();
+                /*if (started == false)
+                {
+                    DFSAlgo(startNode);
+                    started = true;
+                    Debug.Log("somthing went wrong");
+                }
+                else
+                {
+                    Debug.Log("Got run");
+                    DFSAlgo(tempNode);
+                }*/
+
 
                 //Implement path finding here
             }
@@ -87,7 +96,7 @@ public class Enemy : MonoBehaviour
         currentDir = currentNode.transform.position - transform.position;
         currentDir = currentDir.normalized;
     }
-    void DFSAlgo(Node currNode)
+    void DFSAlgo()
     {
         // create lists of nodes visited and nodes in the stack
         List<Node> visitedNodes = new List<Node>();
@@ -95,47 +104,83 @@ public class Enemy : MonoBehaviour
 
         List<Node> childrenNodes = new List<Node>();
 
-        Node playerDestination;
+        Node currNode = startNode;
 
+        int childrenVisited = 0;
+
+        int debugLoopLimit = 0;
+
+        bool targetFound = false;
         //Node currNode = startNode;
 
-        playerDestination = player.TargetNode;
-        
-        visitedNodes.Add(currNode);
 
-        if (currNode != playerDestination)
+        while (targetFound == false)
         {
-            
-            visitedNodes.Add(currNode);
-            childrenNodes = currNode.listChildren;
+            tempNode = currNode;
+            debugLoopLimit++;
 
-            if (childrenNodes != null)
+            if (debugLoopLimit > 100)
             {
-                foreach (Node node in childrenNodes)
+                Debug.Log("Loop limit exeded");
+                targetFound = true;
+            }
+            if (tempNode != playerDestination | currNode != playerDestination)
+            {
+
+                visitedNodes.Add(currNode);
+                childrenNodes = currNode.listChildren;
+                stackNodes.Remove(currNode);
+
+                if (childrenNodes.Count != 0)
                 {
-                    if (!visitedNodes.Contains(node))
+                    foreach (Node node in childrenNodes)
                     {
-                        if (!stackNodes.Contains(node))
+                        if (!visitedNodes.Contains(node))
                         {
-                            stackNodes.Add(node);
+                            if (!stackNodes.Contains(node))
+                            {
+                                stackNodes.Add(node);
+                            }
+                        }
+                        else
+                        {
+                            childrenVisited++;
                         }
                     }
+                    if (childrenNodes.Count != childrenVisited)
+                    {
+                        currNode = stackNodes[stackNodes.Count - 1];
+                    }
+                    else
+                    {
+                        visitedNodes.Add(currNode);
+                        stackNodes.Remove(stackNodes[stackNodes.Count -1]);
+
+                        currNode = stackNodes[stackNodes.Count - 1];
+                    }
+
                 }
-                tempNode = stackNodes[stackNodes.Count - 1];
+                else
+                {
+                    Debug.Log("its deadend");
+                    visitedNodes.Add(currNode);
+
+                    stackNodes.Remove(currNode);
+
+                    currNode = stackNodes[stackNodes.Count - 1];
+                }
+
             }
             else
             {
-                stackNodes.Remove(stackNodes[stackNodes.Count - 1]);
-                tempNode = stackNodes[stackNodes.Count - 1];
+                targetFound = true;
+                Debug.Log("found destination");
+                currentNode = currNode;
+                currentDir = currentNode.transform.position - transform.position;
+                currentDir = currentDir.normalized;
             }
-            
         }
-        else
-        {
-            currentNode = currNode;
-            currentDir = currentNode.transform.position - transform.position;
-            currentDir = currentDir.normalized;
-        }
+        
         
     }
     //Implement DFS algorithm method here
